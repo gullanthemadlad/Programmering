@@ -1,0 +1,95 @@
+students = [
+    {"name": "Tobias Fors", "email": "tobias.fors@yh.nackademin.se", "age": 30, "student_id": 11230, "grades": {"Pythonprogrammering 1": 1, "Databasteknik": 4}},
+    {"name": "Karin Börjell", "email": "karin.borjell@yh.nackademin.se", "age": 32, "student_id": 11231, "grades": {"Pythonprogrammering 1": 1, "Pythonprogrammering 2": 3}},
+    {"name": "Daniel Eliasson", "age": 29, "email": "daniel.eliasson@yh.nackademin.se", "student_id": 11233, "grades": {"Pythonprogrammering 1": 1, "Affärsmannaskap": 2}},
+    {"name": "Magdalena Andersson", "age": 50, "email": "magdalena.andersson@yh.nackademin.se", "student_id": 11234, "grades": {"Pythonprogrammering 1": 1, "Webbramverk inom python": 5}},
+]
+
+def welcome_message():
+    print("Welcome to the greatest student system in the world.")
+
+def display_menu():
+    print("What would you like to do?")
+    print("[q] - Exit")
+    print("[0] - List all students from the registry")
+    print("[1] - Add a student to the registry")
+    print("[2] - Remove a student from the registry")
+
+def list_students():
+    print("List of Students:")
+    print("[q] Go back")
+    for index, student in enumerate(students):
+        print(f"[{index}] ID: {student['student_id']} - {student['name']}")
+
+def show_student(student_id):
+    student = next((s for s in students if s['student_id'] == student_id), None)
+    if student:
+        print("Student Details:")
+        print(f"Name: {student['name']}")
+        print(f"ID: {student['student_id']}")
+        print(f"Email: {student['email']}")
+        print(f"Age: {student['age']}")
+        print("Grades:")
+        for course, grade in student['grades'].items():
+            print(f"  {course}: {grade}")
+    else:
+        print("Student not found.")
+
+def add_student():
+    try:
+        student_id = int(input("Enter student ID: "))
+        if any(s['student_id'] == student_id for s in students):
+            print("A student with this ID already exists.")
+            return
+        name = input("Enter student name: ").strip()
+        email = input("Enter student email: ").strip()
+        age = int(input("Enter student age: "))
+        grades = {}
+        students.append({"name": name, "email": email, "age": age, "student_id": student_id, "grades": grades})
+        print(f"Student {name} added.")
+    except ValueError:
+        print("Please enter valid input.")
+
+def remove_student():
+    try:
+        student_id = int(input("Enter student ID to remove: "))
+        student = next((s for s in students if s['student_id'] == student_id), None)
+        if student:
+            students.remove(student)
+            print(f"Student with ID {student_id} removed successfully.")
+        else:
+            print("No student found with this ID.")
+    except ValueError:
+        print("Please enter a valid ID.")
+
+def main():
+    welcome_message()
+    while True:
+        display_menu()
+        choice = input("Choice: ").strip().lower()
+        if choice == 'q':
+            print("Goodbye!")
+            break
+        elif choice == '0':
+            list_students()
+            student_choice = input("Choose a student by number or [q] to go back: ").strip().lower()
+            if student_choice == 'q':
+                continue
+            try:
+                student_index = int(student_choice)
+                if 0 <= student_index < len(students):
+                    show_student(students[student_index]['student_id'])
+                else:
+                    print("Invalid index, please try again.")
+            except ValueError:
+                print("Invalid input, please try again.")
+        elif choice == '1':
+            add_student()
+        elif choice == '2':
+            remove_student()
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == "__main__":
+    main()
+
